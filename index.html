@@ -29,10 +29,10 @@
         <button class="btn btn-secondary" data-go="profile">👤 Perfil</button>
       </div>
     </main>
-    <footer class="lobby-foot">Versão 0.1 · modo solo contra o computador</footer>
+    <footer class="lobby-foot">Versão 0.2 · 4 times · modo solo contra o computador</footer>
   </section>
 
-  <!-- ESCOLHA DE DIFICULDADE -->
+  <!-- NOVA PARTIDA -->
   <section id="screen-setup" class="screen">
     <header class="topbar">
       <button class="btn btn-ghost" data-go="lobby">← Voltar</button>
@@ -40,11 +40,23 @@
       <span class="topbar-spacer"></span>
     </header>
     <div class="panel-wrap">
-      <p class="muted">Escolha a dificuldade dos adversários:</p>
+      <p class="muted">Dificuldade dos adversários (você joga com o Time Azul 🔵):</p>
       <div id="difficulty-list" class="diff-list">
         <button class="diff-card" data-diff="facil"><b>🌱 Fácil</b><small>Adversários lentos e cautelosos. Bom para aprender.</small></button>
         <button class="diff-card selected" data-diff="normal"><b>⚖️ Normal</b><small>Adversários equilibrados, que atacam quando veem chance.</small></button>
-        <button class="diff-card" data-diff="dificil"><b>🔥 Difícil</b><small>Adversários rápidos, que escolhem alvos fracos e se unem contra você.</small></button>
+        <button class="diff-card" data-diff="dificil"><b>🔥 Difícil</b><small>Adversários rápidos, que escolhem alvos fracos e juntam tropas.</small></button>
+      </div>
+      <p class="muted">Tamanho do mapa:</p>
+      <div id="size-list" class="opt-list">
+        <button class="btn btn-chip" data-opt="pequeno">Pequeno</button>
+        <button class="btn btn-chip selected" data-opt="medio">Médio</button>
+        <button class="btn btn-chip" data-opt="grande">Grande</button>
+      </div>
+      <p class="muted">Produção de soldados:</p>
+      <div id="prod-list" class="opt-list">
+        <button class="btn btn-chip" data-opt="lenta">Lenta</button>
+        <button class="btn btn-chip selected" data-opt="normal">Normal</button>
+        <button class="btn btn-chip" data-opt="rapida">Rápida</button>
       </div>
       <button id="btn-start" class="btn btn-primary btn-big">Iniciar partida</button>
     </div>
@@ -53,11 +65,11 @@
   <!-- PARTIDA -->
   <section id="screen-game" class="screen">
     <header class="hud">
-      <div id="hud-objective" class="hud-objective">Objetivo: conquiste todas as ilhas inimigas</div>
+      <div id="hud-objective" class="hud-objective">Objetivo: seja o último time de pé</div>
       <div class="hud-stats">
         <span title="Tempo">⏱ <b id="hud-time">00:00</b></span>
-        <span title="Territórios">🏝 <b id="hud-territories">1</b></span>
-        <span title="Soldados">🪖 <b id="hud-soldiers">0</b></span>
+        <span title="Seus territórios">🏝 <b id="hud-territories">1</b></span>
+        <span title="Seus soldados">🪖 <b id="hud-soldiers">0</b></span>
       </div>
       <div class="hud-buttons">
         <button id="btn-speed" class="btn btn-icon" aria-label="Velocidade">1x</button>
@@ -66,8 +78,24 @@
       </div>
     </header>
 
+    <div id="team-bar" class="team-bar">
+      <div class="team-chip me" data-team="1"><i class="dot" style="background:#2589FF"></i><span><b data-k="isl">1</b>🏝 <b data-k="sol">0</b>🪖</span></div>
+      <div class="team-chip" data-team="2"><i class="dot" style="background:#F04452"></i><span><b data-k="isl">1</b>🏝 <b data-k="sol">0</b>🪖</span></div>
+      <div class="team-chip" data-team="3"><i class="dot" style="background:#FFC533"></i><span><b data-k="isl">1</b>🏝 <b data-k="sol">0</b>🪖</span></div>
+      <div class="team-chip" data-team="4"><i class="dot" style="background:#35C96B"></i><span><b data-k="isl">1</b>🏝 <b data-k="sol">0</b>🪖</span></div>
+      <div class="team-chip"><i class="dot" style="background:#C9C4AF"></i><span><b id="neutral-count">0</b>🏝</span></div>
+    </div>
+
     <div id="map-wrap" class="map-wrap">
       <canvas id="map-canvas"></canvas>
+
+      <div class="legend">
+        <div><i class="dot" style="background:#2589FF"></i>Time Azul (você)</div>
+        <div><i class="dot" style="background:#F04452"></i>Time Vermelho</div>
+        <div><i class="dot" style="background:#FFC533"></i>Time Amarelo</div>
+        <div><i class="dot" style="background:#35C96B"></i>Time Verde</div>
+        <div><i class="dot" style="background:#C9C4AF"></i>Ilha neutra</div>
+      </div>
 
       <div id="overlay-pause" class="overlay hidden">
         <h2>⏸ Partida pausada</h2>
@@ -100,6 +128,7 @@
     <div id="result-card" class="result-card">
       <h2 id="result-title">Resultado</h2>
       <p id="result-sub" class="muted"></p>
+      <div id="result-teams" class="teams-final"></div>
       <div id="result-stats" class="stats-grid"></div>
       <p id="result-gains" class="gains"></p>
       <div class="result-actions">
@@ -172,4 +201,4 @@
 <script src="js/lobby.js"></script>
 <script src="js/main.js"></script>
 </body>
-</html>
+        </html>
