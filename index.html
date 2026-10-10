@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08283b">
+  <title>Conquista Mundial</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<noscript>Ative o JavaScript para jogar Conquista Mundial.</noscript>
+<div id="app">
+
+  <!-- LOBBY -->
+  <section id="screen-lobby" class="screen active">
+    <div class="lobby-bg"></div>
+    <header class="lobby-top">
+      <button class="player-chip" data-go="profile" aria-label="Abrir perfil">
+        <span id="lobby-avatar" class="avatar">🦅</span>
+        <span class="chip-text"><b id="lobby-name">Comandante</b><small id="lobby-level">Nível 1</small></span>
+      </button>
+    </header>
+    <main class="lobby-main">
+      <h1 class="logo">CONQUISTA<span>MUNDIAL</span></h1>
+      <p class="tagline">Domine o arquipélago.</p>
+      <button class="btn btn-primary btn-big" data-go="setup">⚔️ PARTIDA</button>
+      <div class="lobby-row">
+        <button class="btn btn-secondary" data-go="ranking">🏆 Ranking</button>
+        <button class="btn btn-secondary" data-go="profile">👤 Perfil</button>
+      </div>
+    </main>
+    <footer class="lobby-foot">Versão 0.1 · modo solo contra o computador</footer>
+  </section>
+
+  <!-- ESCOLHA DE DIFICULDADE -->
+  <section id="screen-setup" class="screen">
+    <header class="topbar">
+      <button class="btn btn-ghost" data-go="lobby">← Voltar</button>
+      <h2>Nova partida</h2>
+      <span class="topbar-spacer"></span>
+    </header>
+    <div class="panel-wrap">
+      <p class="muted">Escolha a dificuldade dos adversários:</p>
+      <div id="difficulty-list" class="diff-list">
+        <button class="diff-card" data-diff="facil"><b>🌱 Fácil</b><small>Adversários lentos e cautelosos. Bom para aprender.</small></button>
+        <button class="diff-card selected" data-diff="normal"><b>⚖️ Normal</b><small>Adversários equilibrados, que atacam quando veem chance.</small></button>
+        <button class="diff-card" data-diff="dificil"><b>🔥 Difícil</b><small>Adversários rápidos, que escolhem alvos fracos e se unem contra você.</small></button>
+      </div>
+      <button id="btn-start" class="btn btn-primary btn-big">Iniciar partida</button>
+    </div>
+  </section>
+
+  <!-- PARTIDA -->
+  <section id="screen-game" class="screen">
+    <header class="hud">
+      <div id="hud-objective" class="hud-objective">Objetivo: conquiste todas as ilhas inimigas</div>
+      <div class="hud-stats">
+        <span title="Tempo">⏱ <b id="hud-time">00:00</b></span>
+        <span title="Territórios">🏝 <b id="hud-territories">1</b></span>
+        <span title="Soldados">🪖 <b id="hud-soldiers">0</b></span>
+      </div>
+      <div class="hud-buttons">
+        <button id="btn-speed" class="btn btn-icon" aria-label="Velocidade">1x</button>
+        <button id="btn-pause" class="btn btn-icon" aria-label="Pausar">⏸</button>
+        <button id="btn-quit" class="btn btn-icon" aria-label="Abandonar partida">✖</button>
+      </div>
+    </header>
+
+    <div id="map-wrap" class="map-wrap">
+      <canvas id="map-canvas"></canvas>
+
+      <div id="overlay-pause" class="overlay hidden">
+        <h2>⏸ Partida pausada</h2>
+        <button id="btn-resume" class="btn btn-primary">Continuar</button>
+        <button id="btn-restart" class="btn btn-secondary">🔁 Reiniciar partida</button>
+      </div>
+
+      <div id="overlay-confirm" class="overlay hidden">
+        <h2>Abandonar a partida?</h2>
+        <p class="muted">O progresso desta partida será perdido e as estatísticas não serão alteradas.</p>
+        <button id="btn-quit-yes" class="btn btn-danger">Sim, abandonar</button>
+        <button id="btn-quit-no" class="btn btn-secondary">Continuar jogando</button>
+      </div>
+    </div>
+
+    <footer class="dock">
+      <div id="island-info" class="island-info">Toque em uma ilha sua para selecioná-la.</div>
+      <div class="send-row">
+        <span class="muted">Enviar:</span>
+        <button class="btn btn-chip" data-pct="25">25%</button>
+        <button class="btn btn-chip selected" data-pct="50">50%</button>
+        <button class="btn btn-chip" data-pct="75">75%</button>
+        <button class="btn btn-chip" data-pct="100">100%</button>
+      </div>
+    </footer>
+  </section>
+
+  <!-- RESULTADO -->
+  <section id="screen-result" class="screen">
+    <div id="result-card" class="result-card">
+      <h2 id="result-title">Resultado</h2>
+      <p id="result-sub" class="muted"></p>
+      <div id="result-stats" class="stats-grid"></div>
+      <p id="result-gains" class="gains"></p>
+      <div class="result-actions">
+        <button id="btn-again" class="btn btn-primary">🔁 Jogar novamente</button>
+        <button id="btn-result-lobby" class="btn btn-secondary">🏠 Voltar ao lobby</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RANKING -->
+  <section id="screen-ranking" class="screen">
+    <header class="topbar">
+      <button class="btn btn-ghost" data-go="lobby">← Voltar</button>
+      <h2>Ranking</h2>
+      <span class="topbar-spacer"></span>
+    </header>
+    <div class="panel-wrap">
+      <div class="notice">⚠️ Dados de demonstração. Este <b>não</b> é um ranking global real. Só a sua linha é verdadeira.</div>
+      <div class="table-scroll">
+        <table class="rank-table">
+          <thead>
+            <tr><th>#</th><th>Jogador</th><th>V</th><th>D</th><th>Pontos</th><th>Taxa</th></tr>
+          </thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFIL -->
+  <section id="screen-profile" class="screen">
+    <header class="topbar">
+      <button class="btn btn-ghost" data-go="lobby">← Voltar</button>
+      <h2>Perfil</h2>
+      <span class="topbar-spacer"></span>
+    </header>
+    <div class="panel-wrap">
+      <div class="profile-head">
+        <span id="profile-avatar" class="avatar avatar-big">🦅</span>
+        <div class="profile-id">
+          <label for="profile-name-input" class="muted">Nome do jogador</label>
+          <input id="profile-name-input" type="text" maxlength="14" autocomplete="off">
+          <div class="level-line"><b id="profile-level">Nível 1</b><small id="xp-text" class="muted">0 / 50 XP</small></div>
+          <div class="xp-bar"><div id="xp-bar-fill" class="xp-fill"></div></div>
+        </div>
+      </div>
+      <p class="muted">Escolha seu avatar:</p>
+      <div id="avatar-picker" class="avatar-picker"></div>
+      <div class="stats-grid">
+        <div class="stat"><small>Vitórias</small><b id="stat-wins">0</b></div>
+        <div class="stat"><small>Derrotas</small><b id="stat-losses">0</b></div>
+        <div class="stat"><small>Total de partidas</small><b id="stat-games">0</b></div>
+        <div class="stat"><small>Pontuação</small><b id="stat-score">0</b></div>
+        <div class="stat"><small>Taxa de vitória</small><b id="stat-rate">0%</b></div>
+        <div class="stat"><small>Experiência</small><b id="stat-xp">0</b></div>
+      </div>
+      <p class="muted small">Seus dados ficam salvos só neste navegador (localStorage).</p>
+    </div>
+  </section>
+
+</div>
+<div id="toast" role="status"></div>
+
+<script src="js/storage.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/ranking.js"></script>
+<script src="js/map.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/game.js"></script>
+<script src="js/lobby.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
